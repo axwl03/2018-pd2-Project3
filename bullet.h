@@ -11,9 +11,10 @@ class bullet : public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
-    explicit bullet(int s, int d, QObject *parent = nullptr);
+    explicit bullet(int s, int d, int de, QObject *parent = nullptr);
     void fly();
     int speed, damage;
+    float deviation;
 };
 
 #endif // BULLET_H

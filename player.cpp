@@ -4,7 +4,7 @@ player::player(QObject *parent) : QObject(parent)
 {
 }
 player::player(int character_ID){
-    character.append("./picture/player.png");
+    character.append("./picture/killer.png");
     setPixmap(character.at(character_ID));
     setScale(0.5);
     setZValue(1);
@@ -12,9 +12,14 @@ player::player(int character_ID){
 }
 void player::damaged(int damage){
     health -= damage;
-    qDebug() << health;
-    if(health <= 0){
-        this->scene()->removeItem(this);
-        delete this;
-    }
+}
+void player::move(int tx, int ty){
+        if(tx - x() > 0)
+            setPos(x()+1,y());
+        if(tx - x() < 0)
+            setPos(x()-1,y());
+        if(ty - y() > 0)
+            setPos(x(), y()+1);
+        if(ty - y() < 0)
+            setPos(x(), y()-1);
 }

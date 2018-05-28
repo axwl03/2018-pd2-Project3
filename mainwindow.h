@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMediaPlayer>
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
 #include <QKeyEvent>
@@ -11,6 +12,7 @@
 #include "player.h"
 #include "weapon.h"
 #include <QGraphicsScene>
+#include <QDateTime>
 
 namespace Ui {
 class MainWindow;
@@ -28,15 +30,19 @@ public:
     void player_action();
     void shoot();
     void check_health();
+    void enemy_move();
+    void update_rand();
 
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
-    player *p, *e;
+    player *p;
     weapon *w;
     static bool up, down, left, right, s;
-    int shot_interval;
+    int shot_interval, time, t1, t2;
+    QVector<player*> e;
     QTimer *timer;
+    QMediaPlayer sound;
 };
 
 #endif // MAINWINDOW_H

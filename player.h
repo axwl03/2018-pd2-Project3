@@ -5,6 +5,7 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
 #include <QDebug>
+
 class player : public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
@@ -13,6 +14,7 @@ public:
     player(int character_ID);
     void damaged(int damage);
     int health;
+    void move(int tx, int ty);
 private:
     QVector<QString> character;
 
