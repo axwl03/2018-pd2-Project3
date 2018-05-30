@@ -1,18 +1,12 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#include <QObject>
-#include <QGraphicsPixmapItem>
+#include "human.h"
 
-class enemy : public QObject, public QGraphicsPixmapItem
+class Enemy: public Human
 {
-    Q_OBJECT
 public:
-    explicit enemy(QObject *parent = nullptr);
-
-signals:
-
-public slots:
+    Enemy();
 };
 
 #endif // ENEMY_H

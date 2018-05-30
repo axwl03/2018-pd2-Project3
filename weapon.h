@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QGraphicsPixmapItem>
-#include "bullet.h"
 
 class weapon : public QObject, public QGraphicsPixmapItem
 {

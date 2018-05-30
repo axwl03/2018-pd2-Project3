@@ -28,7 +28,7 @@ public:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
     void player_action();
-    void shoot();
+    void shoot(const weapon &w);
     void check_health();
     void enemy_move();
     void update_rand();
@@ -37,7 +37,6 @@ private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
     player *p;
-    weapon *w;
     static bool up, down, left, right, s;
     int shot_interval, time, t1, t2;
     QVector<player*> e;

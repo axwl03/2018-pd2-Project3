@@ -1,5 +1,5 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef HUMAN_H
+#define HUMAN_H
 
 #include <QObject>
 #include <QGraphicsPixmapItem>
@@ -8,21 +8,19 @@
 #include <QDebug>
 #include <weapon.h>
 
-class player : public QObject, public QGraphicsPixmapItem
+class Human : public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
-    explicit player(QObject *parent = nullptr);
-    player(int character_ID);
+    explicit Human(QObject *parent = nullptr);
     void damaged(int damage);
+    virtual void setItemPos() = 0;
     int health, timeInterval;
-    void move(int tx, int ty);
-    void setItemPos();
     weapon *w;
     QGraphicsRectItem *healthbar;
+
 private:
     QVector<QString> character;
-
 };
 
-#endif // PLAYER_H
+#endif // HUMAN_H

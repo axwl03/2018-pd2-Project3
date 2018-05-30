@@ -29,14 +29,18 @@ SOURCES += \
     bullet.cpp \
     player.cpp \
     weapon.cpp \
-    menu.cpp
+    menu.cpp \
+    human.cpp \
+    enemy.cpp
 
 HEADERS += \
         mainwindow.h \
     bullet.h \
     player.h \
     weapon.h \
-    menu.h
+    menu.h \
+    human.h \
+    enemy.h
 
 FORMS += \
         mainwindow.ui \

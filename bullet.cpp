@@ -11,6 +11,8 @@ bullet::bullet(int s, int d, int de, QObject *parent) : QObject(parent)
             deviation = -(float)(qrand()%(10*de))/10;
 
     }
+    setPixmap(QPixmap("./picture/bullet.png"));
+    setScale(0.3);
 }
 void bullet::fly(){
     setPos(x()+deviation, y()-speed);

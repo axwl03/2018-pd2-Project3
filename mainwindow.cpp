@@ -11,9 +11,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->setScene(scene);
     scene->setBackgroundBrush(Qt::lightGray);
     p = new player(0);
-    w = new weapon(1); //<--
     scene->addItem(p);
-    scene->addItem(w);
+    scene->addItem(p->w);
     p->setPos(500, 400);   //<--
     p->setData(0, "p1");
 
@@ -21,6 +20,9 @@ MainWindow::MainWindow(QWidget *parent) :
     scene->addItem(e[0]);
     e[0]->setPos(200, -100);
     e[0]->setData(0, "enemy");
+    scene->addItem(e[0]->w);
+    scene->addItem(e[0]->healthbar);
+    e[0]->w->setData(0, -30);
 
     /*QRectF r = e[0]->mapRectToParent(QRectF(0, -50, 200, 20));
     qDebug() << r;
@@ -80,8 +82,8 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event){
 }
 void MainWindow::player_action(){
     int d = 3;
-    if(shot_interval < 100)
-        ++shot_interval;
+    if(p->timeInterval < 100)
+        ++p->timeInterval;
     if(up == 1 && p->y() >= 500)
         p->setPos(p->x(), p->y()-d);
     if(down == 1 && p->y()+p->pixmap().height()*p->scale() <= 1000)
@@ -90,20 +92,18 @@ void MainWindow::player_action(){
         p->setPos(p->x()-d, p->y());
     if(right == 1 && p->x()+p->pixmap().width()*p->scale() <= 800)
         p->setPos(p->x()+d, p->y());
-    if(s == 1 && shot_interval >= w->shot_interval){
-        shot_interval = 0;
-        shoot();
+    if(s == 1 && p->timeInterval >= p->w->shot_interval){
+        p->timeInterval = 0;
+        shoot(*p->w);
     }
-    w->setPos(p->x()+p->pixmap().width()*p->scale()/1.6, p->y()+p->pixmap().height()*p->scale()/1.6-w->pixmap().height()*w->scale());
+    p->setItemPos();
 }
-void MainWindow::shoot(){
-    bullet *b = new bullet(w->data(0).toInt(), w->data(1).toInt(), w->data(2).toInt());
+void MainWindow::shoot(const weapon &w){
+    bullet *b = new bullet(w.data(0).toInt(), w.data(1).toInt(), w.data(2).toInt());
     sound.setPosition(20);
     sound.play();
-    b->setPixmap(QPixmap("./picture/bullet.png"));
-    b->setScale(0.2);
     scene->addItem(b);
-    b->setPos(w->x() + w->pixmap().width()*w->scale()/2 - b->pixmap().width()*b->scale()/2, w->y()-b->pixmap().height()*b->scale());
+    b->setPos(w.x() + w.pixmap().width()*w.scale()/2 - b->pixmap().width()*b->scale()/2, w.y()-b->pixmap().height()*b->scale());
     b->connect(timer, &QTimer::timeout, b, &bullet::fly);
 }
 void MainWindow::check_health(){
@@ -122,21 +122,30 @@ void MainWindow::enemy_move(){
         update_rand();
     }
     if(e.size() != 0){
-        if(e[0]->health > 0)
+        ++e[0]->timeInterval;
+        if(e[0]->health > 0){
             e[0]->move(t1, t2);
+            e[0]->setItemPos();
+        /*    if(e[0]->timeInterval >= e[0]->w->shot_interval && time > 100){
+                shoot(*e[0]->w);
+                e[0]->timeInterval = 0;
+            }*/
+        }
         if(e[0]->health <= 0){
             scene->removeItem(e[0]);
+            scene->removeItem(e[0]->w);
+            scene->removeItem(e[0]->healthbar);
             e.remove(0);
         }
     }
-    if(e.size() != 0){
+    /*if(e.size() != 0){
         if(e[0]->health > 0)
             e[0]->move(p->x(), t2);
         if(e[0]->health <= 0){
             scene->removeItem(e[0]);
             e.remove(0);
         }
-    }
+    }*/
 }
 void MainWindow::update_rand(){
     qsrand(QDateTime::currentMSecsSinceEpoch());

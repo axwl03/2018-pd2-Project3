@@ -2,6 +2,9 @@
 #define MENU_H
 
 #include <QMainWindow>
+#include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
+#include "mainwindow.h"
 
 namespace Ui {
 class Menu;
@@ -15,8 +18,13 @@ public:
     explicit Menu(QWidget *parent = 0);
     ~Menu();
 
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::Menu *ui;
+    QGraphicsScene *scene;
+    QGraphicsPixmapItem *w1;
 };
 
 #endif // MENU_H
