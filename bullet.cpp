@@ -16,15 +16,10 @@ bullet::bullet(int s, int d, int de, QObject *parent) : QObject(parent)
 }
 void bullet::fly(){
     setPos(x()+deviation, y()-speed);
-    int w = 0, h = 0;
     for(int i = 0; i < scene()->items().size(); ++i){
         if(scene()->items().at(i) == this)
             continue;
-        w = scene()->items().at(i)->boundingRect().width() * scene()->items().at(i)->scale();
-        h = scene()->items().at(i)->boundingRect().width() * scene()->items().at(i)->scale();
-        if(x()+pixmap().width()*scale()/2 >= scene()->items().at(i)->pos().x() && x()+pixmap().width()*scale()/2 <= scene()->items().at(i)->pos().x()+w
-                && y()+pixmap().height()*scale()/2 >= scene()->items().at(i)->pos().y() && y()+pixmap().height()*scale()/2 <= scene()->items().at(i)->pos().y()+h
-                && scene()->items().at(i)->data(0).toString() == "enemy"){
+        if(isHit(*(scene()->items().at(i)))){
             qDebug() << pos()<< scene()->items().at(i) << "hit";
             scene()->items().at(i)->setData(1, true);//being hit
             scene()->items().at(i)->setData(2, damage);//set damage
@@ -33,8 +28,25 @@ void bullet::fly(){
             return;
         }
     }
-    if(y()<-100){
+    if(y()<-100 || y()>1100){
         scene()->removeItem(this);
         delete this;
     }
+}
+bool bullet::isHit(const QGraphicsItem &human){
+    int bx = x() + pixmap().width() * scale() / 2; //center position x of bullet
+    int by = y() + pixmap().height() * scale() / 2; //center position y of bullet
+    int w = human.boundingRect().width() * human.scale(); //human's width
+    int h = human.boundingRect().height() * human.scale();  //human's height
+    if(human.data(0).toString() == "enemy"){
+        if(bx >= human.pos().x() - w && bx <= human.pos().x() && by <= human.pos().y() && by >= human.pos().y() - h)
+            return true;
+        else return false;
+    }
+    if(human.data(0).toString() == "p1"){
+        if(bx >= human.pos().x() && bx <= human.pos().x() + w && by >= human.pos().y() && by <= human.pos().y() + h)
+            return true;
+        else return false;
+    }
+    return false;
 }

@@ -12,14 +12,12 @@ class Human : public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
-    explicit Human(QObject *parent = nullptr);
+    explicit Human(int h, QObject *parent = nullptr);
     void damaged(int damage);
     virtual void setItemPos() = 0;
     int health, timeInterval;
     weapon *w;
     QGraphicsRectItem *healthbar;
-
-private:
     QVector<QString> character;
 };
 

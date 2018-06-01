@@ -6,7 +6,9 @@
 class Enemy: public Human
 {
 public:
-    Enemy();
+    Enemy(int h, int character_ID);
+    void move(int tx, int ty);
+    virtual void setItemPos();
 };
 
 #endif // ENEMY_H

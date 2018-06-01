@@ -10,24 +10,13 @@ MainWindow::MainWindow(QWidget *parent) :
     scene = new QGraphicsScene(0, 0, 800, 1000);
     ui->graphicsView->setScene(scene);
     scene->setBackgroundBrush(Qt::lightGray);
-    p = new player(0);
+    p = new Player(100, 0);
     scene->addItem(p);
     scene->addItem(p->w);
     p->setPos(500, 400);   //<--
     p->setData(0, "p1");
+    //scene->addItem(p->healthbar);
 
-    e.push_back(new player(0));
-    scene->addItem(e[0]);
-    e[0]->setPos(200, -100);
-    e[0]->setData(0, "enemy");
-    scene->addItem(e[0]->w);
-    scene->addItem(e[0]->healthbar);
-    e[0]->w->setData(0, -30);
-
-    /*QRectF r = e[0]->mapRectToParent(QRectF(0, -50, 200, 20));
-    qDebug() << r;
-    scene->addRect(r,Qt::SolidLine,Qt::green);
-*/
     sound.setMedia(QUrl::fromLocalFile("/home/wesleylin/ShootingGame/sound/gun.mp3"));
 
     timer = new QTimer(this);
@@ -35,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     timer->start(10);
     shot_interval = 100;
     connect(timer, &QTimer::timeout, this, &MainWindow::check_health);
-    connect(timer, &QTimer::timeout, this, &MainWindow::enemy_move);
+    wave();
 }
 MainWindow::~MainWindow()
 {
@@ -113,7 +102,11 @@ void MainWindow::check_health(){
             e[i]->setData(1, false);
             e[i]->setData(2, 0);
         }
-    }
+    }/*if(p->data(1).toInt() == 1){
+        p->damaged(p->data(2).toInt());
+        p->setData(1, false);
+        p->setData(2, 0);
+    }*/
 }
 void MainWindow::enemy_move(){
     ++time;
@@ -126,7 +119,7 @@ void MainWindow::enemy_move(){
         if(e[0]->health > 0){
             e[0]->move(t1, t2);
             e[0]->setItemPos();
-        /*    if(e[0]->timeInterval >= e[0]->w->shot_interval && time > 100){
+       /*     if(e[0]->timeInterval >= e[0]->w->shot_interval && time > 100){
                 shoot(*e[0]->w);
                 e[0]->timeInterval = 0;
             }*/
@@ -149,7 +142,15 @@ void MainWindow::enemy_move(){
 }
 void MainWindow::update_rand(){
     qsrand(QDateTime::currentMSecsSinceEpoch());
-    t1 = qrand()%800;
-    t2 = qrand()%100+100;
+    t1 = qrand()%700+100;
+    t2 = qrand()%100+200;
 }
-
+void MainWindow::wave(){
+    e.push_back(new Enemy(100, 0));
+    scene->addItem(e[0]);
+    e[0]->setPos(200, -100);
+    scene->addItem(e[0]->w);
+    scene->addItem(e[0]->healthbar);
+    e[0]->w->setData(0, -30);
+    connect(timer, &QTimer::timeout, this, &MainWindow::enemy_move);
+}

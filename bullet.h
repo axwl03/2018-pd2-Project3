@@ -15,6 +15,7 @@ public:
     void fly();
     int speed, damage;
     float deviation;
+    bool isHit(const QGraphicsItem &human);
 };
 
 #endif // BULLET_H

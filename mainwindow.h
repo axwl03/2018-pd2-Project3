@@ -6,13 +6,14 @@
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
 #include <QKeyEvent>
+#include <QDateTime>
+#include <QDebug>
 #include <QTimer>
 #include "bullet.h"
-#include <QDebug>
 #include "player.h"
 #include "weapon.h"
-#include <QGraphicsScene>
-#include <QDateTime>
+#include "enemy.h"
+#include "human.h"
 
 namespace Ui {
 class MainWindow;
@@ -32,14 +33,15 @@ public:
     void check_health();
     void enemy_move();
     void update_rand();
+    void wave();
 
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
-    player *p;
+    Player *p;
     static bool up, down, left, right, s;
     int shot_interval, time, t1, t2;
-    QVector<player*> e;
+    QVector<Enemy*> e;
     QTimer *timer;
     QMediaPlayer sound;
 };
