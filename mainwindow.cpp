@@ -4,7 +4,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),time(500)
+    ui(new Ui::MainWindow), stage(1), waveStatus(0), score(0), respawnTime(0)
 {
     ui->setupUi(this);
     scene = new QGraphicsScene(0, 0, 800, 1000);
@@ -15,10 +15,16 @@ MainWindow::MainWindow(QWidget *parent) :
     scene->addItem(p->w);
     p->setPos(500, 400);   //<--
     p->setData(0, "p1");
-    //scene->addItem(p->healthbar);
-
-    sound.setMedia(QUrl::fromLocalFile("/home/wesleylin/ShootingGame/sound/gun.mp3"));
-
+    scene->addItem(p->healthbar);
+    //set HP
+    healthScene = new QGraphicsScene(0, 0, 140, 100);
+    ui->graphicsView_2->setScene(healthScene);
+    for(int i = 0; i < 3; ++i){
+        hp.push_back(new QGraphicsPixmapItem(QPixmap("./picture/heart.png").scaled(40,40)));
+        hp[i]->setPos(50*i, 0);
+        healthScene->addItem(hp[i]);
+    }
+    qsrand(QDateTime::currentMSecsSinceEpoch());
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::player_action);
     timer->start(10);
@@ -32,22 +38,30 @@ MainWindow::~MainWindow()
 }
 bool MainWindow::up = 0, MainWindow::down = 0, MainWindow::left = 0, MainWindow::right = 0, MainWindow::s = 0;
 void MainWindow::keyPressEvent(QKeyEvent *event){
-    switch(event->key()){
-    case Qt::Key_W:
-        up = 1;
-        break;
-    case Qt::Key_A:
-        left = 1;
-        break;
-    case Qt::Key_S:
-        down = 1;
-        break;
-    case Qt::Key_D:
-        right = 1;
-        break;
-    case Qt::Key_Space:
-        s = 1;
-        break;
+    if(p->scene() != 0){
+        switch(event->key()){
+        case Qt::Key_W:
+            up = 1;
+            break;
+        case Qt::Key_A:
+            left = 1;
+            break;
+        case Qt::Key_S:
+            down = 1;
+            break;
+        case Qt::Key_D:
+            right = 1;
+            break;
+        case Qt::Key_Space:
+            if(respawnTime == 0) //could not shoot while respawning
+                s = 1;
+            break;
+        case Qt::Key_F:
+            scene->removeItem(p->w);
+            p->changeWeapon();
+            p->setItemPos();
+            scene->addItem(p->w);
+        }
     }
 }
 void MainWindow::keyReleaseEvent(QKeyEvent *event){
@@ -70,7 +84,7 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event){
     }
 }
 void MainWindow::player_action(){
-    int d = 3;
+    int d = 2.5;
     if(p->timeInterval < 100)
         ++p->timeInterval;
     if(up == 1 && p->y() >= 500)
@@ -81,54 +95,102 @@ void MainWindow::player_action(){
         p->setPos(p->x()-d, p->y());
     if(right == 1 && p->x()+p->pixmap().width()*p->scale() <= 800)
         p->setPos(p->x()+d, p->y());
-    if(s == 1 && p->timeInterval >= p->w->shot_interval){
+    if(s == 1 && p->timeInterval >= p->w->shot_interval && respawnTime == 0){
         p->timeInterval = 0;
         shoot(*p->w);
     }
     p->setItemPos();
 }
-void MainWindow::shoot(const weapon &w){
+void MainWindow::shoot(weapon &w){
     bullet *b = new bullet(w.data(0).toInt(), w.data(1).toInt(), w.data(2).toInt());
-    sound.setPosition(20);
-    sound.play();
+    w.sound.setPosition(0);
+    w.sound.play();
     scene->addItem(b);
-    b->setPos(w.x() + w.pixmap().width()*w.scale()/2 - b->pixmap().width()*b->scale()/2, w.y()-b->pixmap().height()*b->scale());
+    if(w.data(0).toInt() > 0)
+        b->setPos(w.x() + w.pixmap().width()*w.scale()/2 - b->pixmap().width()*b->scale()/2, w.y()-b->pixmap().height()*b->scale());
+    if(w.data(0).toInt() < 0)
+        b->setPos(w.x() - w.pixmap().width()*w.scale()/2 - b->pixmap().width()*b->scale()/2, w.y()+b->pixmap().height()*b->scale());
     b->connect(timer, &QTimer::timeout, b, &bullet::fly);
 }
 void MainWindow::check_health(){
     for(int i = 0; i < e.size(); ++i){
-        if(e[i]->data(1).toInt() == 1){
-            e[i]->damaged(e[0]->data(2).toInt());
+        if(e[i]->data(1).toInt() == 1){ 
+            e[i]->damaged(e[i]->data(2).toInt());
+            score += e[i]->data(2).toInt();
+            ui->lcdNumber->display(score);
             e[i]->setData(1, false);
             e[i]->setData(2, 0);
         }
-    }/*if(p->data(1).toInt() == 1){
-        p->damaged(p->data(2).toInt());
-        p->setData(1, false);
-        p->setData(2, 0);
-    }*/
+    }
+    if(p->scene() != 0 && respawnTime == 0){
+        if(p->data(1).toInt() == 1 && p->health > 0){
+            p->damaged(p->data(2).toInt());
+            p->setData(1, false);
+            p->setData(2, 0);
+        }
+        if(p->health <= 0){
+            scene->removeItem(p);
+            scene->removeItem(p->w);
+            scene->removeItem(p->healthbar);
+            if(hp.size() > 0){
+                healthScene->removeItem(hp.last());
+                delete hp.last();
+                hp.removeLast();
+                if(hp.size() != 0)
+                    ++respawnTime;
+                if(hp.size() == 0){
+                    QMessageBox::information(this, "Oops!!", "You lose!!");
+                }
+            }
+        }
+    }
+    if(respawnTime != 0){
+        ++respawnTime;
+        if(respawnTime == 300){
+            scene->addItem(p);
+            scene->addItem(p->w);
+            scene->addItem(p->healthbar);
+        }
+        if(respawnTime == 330 || respawnTime == 390 || respawnTime == 450){
+            p->setVisible(0);
+            p->w->setVisible(0);
+        }
+        if(respawnTime == 360 || respawnTime == 420 || respawnTime == 480){
+            p->setVisible(1);
+            p->w->setVisible(1);
+            if(respawnTime == 480){
+                respawnTime = 0;
+                p->health = 100;
+                p->setData(1, false);
+                p->setData(2, 0);
+            }
+        }
+    }
 }
 void MainWindow::enemy_move(){
-    ++time;
-    if(time > 200){
-        time = 0;
-        update_rand();
-    }
-    if(e.size() != 0){
-        ++e[0]->timeInterval;
-        if(e[0]->health > 0){
-            e[0]->move(t1, t2);
-            e[0]->setItemPos();
-       /*     if(e[0]->timeInterval >= e[0]->w->shot_interval && time > 100){
-                shoot(*e[0]->w);
-                e[0]->timeInterval = 0;
-            }*/
+    for(int i = 0; i < e.size(); ++i){
+        ++e[i]->time;
+        if(e[i]->time > 200){
+            e[i]->time = 0;
+            e[i]->setNewPosition();
         }
-        if(e[0]->health <= 0){
-            scene->removeItem(e[0]);
-            scene->removeItem(e[0]->w);
-            scene->removeItem(e[0]->healthbar);
-            e.remove(0);
+    }
+    for(int i = 0; i < e.size(); ++i){
+        ++e[i]->timeInterval;
+        if(e[i]->health > 0){
+            e[i]->move();
+            e[i]->setItemPos();
+            if(e[i]->timeInterval >= e[i]->w->shot_interval && (e[i]->w->x()-p->w->x() < 50 && e[i]->w->x()-p->w->x() >-50)){//enemy firing
+                shoot(*e[i]->w);
+                e[i]->timeInterval = 0;
+            }
+        }
+        if(e[i]->health <= 0){
+            scene->removeItem(e[i]);
+            scene->removeItem(e[i]->w);
+            scene->removeItem(e[i]->healthbar);
+            delete e[i];
+            e.remove(i);
         }
     }
     /*if(e.size() != 0){
@@ -139,18 +201,21 @@ void MainWindow::enemy_move(){
             e.remove(0);
         }
     }*/
-}
-void MainWindow::update_rand(){
-    qsrand(QDateTime::currentMSecsSinceEpoch());
-    t1 = qrand()%700+100;
-    t2 = qrand()%100+200;
+    if(e.size() == 0 && stage < 5){
+        ++stage;
+        wave();
+    }
 }
 void MainWindow::wave(){
-    e.push_back(new Enemy(100, 0));
-    scene->addItem(e[0]);
-    e[0]->setPos(200, -100);
-    scene->addItem(e[0]->w);
-    scene->addItem(e[0]->healthbar);
-    e[0]->w->setData(0, -30);
-    connect(timer, &QTimer::timeout, this, &MainWindow::enemy_move);
+    for(int i = 0; i < stage; ++i){
+        e.push_back(new Enemy(100, 0));
+        scene->addItem(e[i]);
+        e[i]->setPos(qrand()%700+100, -100);
+        scene->addItem(e[i]->w);
+        scene->addItem(e[i]->healthbar);
+        if(waveStatus == 0){
+            connect(timer, &QTimer::timeout, this, &MainWindow::enemy_move);
+            ++waveStatus;
+        }
+    }ui->lcdNumber_2->display(stage);
 }

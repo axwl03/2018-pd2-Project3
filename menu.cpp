@@ -8,7 +8,7 @@ Menu::Menu(QWidget *parent) :
     ui->setupUi(this);
     scene = new QGraphicsScene(0, 0, 600, 500);
     ui->graphicsView->setScene(scene);
-    w1 = scene->addPixmap(QPixmap("/home/wesleylin/ShootingGame/picture/side_sniperRifle.png"));
+    w1 = scene->addPixmap(QPixmap("/home/wesleylin/ShootingGame/picture/o_side_AWM.png"));
     w1->setPos(20, 60);
     w1->setScale(0.2);
 }

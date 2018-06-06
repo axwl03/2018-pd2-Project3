@@ -1,26 +1,29 @@
 #include "enemy.h"
 
-Enemy::Enemy(int h, int character_ID): Human(h)
+Enemy::Enemy(int h, int character_ID): Human(h), time()
 {
     character.append("./picture/killer.png");
     setPixmap(character.at(character_ID));
-    setScale(0.5);
+    setScale(0.4);
     setZValue(1);
     setRotation(180);
     setData(0, "enemy");
     w = new weapon(1);
+    w->setData(0, -10);
     w->setRotation(180);
     healthbar = new QGraphicsRectItem;
-    healthbar->setBrush(Qt::green);
+    healthbar->setBrush(Qt::green);  
+    rx = qrand()%700+100;
+    ry = qrand()%100+200;
 }
-void Enemy::move(int tx, int ty){
-    if(tx - x() > 0)
+void Enemy::move(){
+    if(rx - x() > 0)
         setPos(x()+1,y());
-    if(tx - x() < 0)
+    if(rx - x() < 0)
         setPos(x()-1,y());
-    if(ty - y() > 0)
+    if(ry - y() > 0)
         setPos(x(), y()+1);
-    if(ty - y() < 0)
+    if(ry - y() < 0)
         setPos(x(), y()-1);
 }
 void Enemy::setItemPos(){
@@ -30,6 +33,10 @@ void Enemy::setItemPos(){
         healthbar->setBrush(Qt::yellow);
     if(health <= 20)
         healthbar->setBrush(Qt::red);
+}
+void Enemy::setNewPosition(){
+    rx = qrand()%700+100;
+    ry = qrand()%100+200;
 }
 
 

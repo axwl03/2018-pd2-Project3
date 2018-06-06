@@ -14,6 +14,7 @@
 #include "weapon.h"
 #include "enemy.h"
 #include "human.h"
+#include <QMessageBox>
 
 namespace Ui {
 class MainWindow;
@@ -29,21 +30,20 @@ public:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
     void player_action();
-    void shoot(const weapon &w);
+    void shoot(weapon &w);
     void check_health();
     void enemy_move();
-    void update_rand();
     void wave();
 
 private:
     Ui::MainWindow *ui;
-    QGraphicsScene *scene;
+    QGraphicsScene *scene, *healthScene;
     Player *p;
     static bool up, down, left, right, s;
-    int shot_interval, time, t1, t2;
+    int shot_interval, stage, waveStatus, score, respawnTime;
     QVector<Enemy*> e;
+    QVector<QGraphicsPixmapItem*> hp;
     QTimer *timer;
-    QMediaPlayer sound;
 };
 
 #endif // MAINWINDOW_H

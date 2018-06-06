@@ -14,6 +14,8 @@ class Player : public Human
 public:
     Player(int h, int character_ID);
     virtual void setItemPos();
+    void changeWeapon();
+    weapon *w1, *w2;
 };
 
 #endif // PLAYER_H
