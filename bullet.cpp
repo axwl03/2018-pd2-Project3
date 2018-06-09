@@ -1,6 +1,6 @@
 #include "bullet.h"
 
-bullet::bullet(int s, int d, int de, QObject *parent) : QObject(parent)
+bullet::bullet(int s, int d, int de, QObject *parent) : QObject(parent), time(0), flash(QPixmap("./picture/flash.png"))
 {
     speed = s;
     damage = d;
@@ -13,8 +13,10 @@ bullet::bullet(int s, int d, int de, QObject *parent) : QObject(parent)
     }
     setPixmap(QPixmap("./picture/bullet.png"));
     setScale(0.3);
+    setData(0, "bullet");
 }
 void bullet::fly(){
+    ++time;
     setPos(x()+deviation, y()-speed);
     for(int i = 0; i < scene()->items().size(); ++i){
         if(scene()->items().at(i) == this)
@@ -27,6 +29,9 @@ void bullet::fly(){
             delete this;
             return;
         }
+    }
+    if(time == 2){
+        scene()->removeItem(&flash);
     }
     if(y()<-100 || y()>1100){
         scene()->removeItem(this);

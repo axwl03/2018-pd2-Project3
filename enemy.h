@@ -7,10 +7,12 @@ class Enemy: public Human
 {
 public:
     Enemy(int h, int character_ID);
-    void move();
+    Enemy(int h, int character_ID, bool e);
+    virtual ~Enemy();
+    virtual void move();
     virtual void setItemPos();
-    void setNewPosition();
-    int rx, ry, time;
+    virtual void setNewPosition();
+    int rx, ry;
 };
 
 #endif // ENEMY_H

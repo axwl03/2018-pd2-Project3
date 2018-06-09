@@ -6,11 +6,6 @@ Menu::Menu(QWidget *parent) :
     ui(new Ui::Menu)
 {
     ui->setupUi(this);
-    scene = new QGraphicsScene(0, 0, 600, 500);
-    ui->graphicsView->setScene(scene);
-    w1 = scene->addPixmap(QPixmap("/home/wesleylin/ShootingGame/picture/o_side_AWM.png"));
-    w1->setPos(20, 60);
-    w1->setScale(0.2);
 }
 
 Menu::~Menu()
@@ -20,7 +15,19 @@ Menu::~Menu()
 
 void Menu::on_pushButton_clicked()
 {
-    MainWindow *m = new MainWindow;
+    MainWindow *m = new MainWindow(0);
     m->show();
     close();
+}
+
+void Menu::on_pushButton_2_clicked()
+{
+    MainWindow *m = new MainWindow(0, 0);
+    m->show();
+    close();
+}
+
+void Menu::on_pushButton_3_clicked()
+{
+
 }

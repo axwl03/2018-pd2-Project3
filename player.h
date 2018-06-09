@@ -13,9 +13,10 @@ class Player : public Human
 {
 public:
     Player(int h, int character_ID);
+    virtual ~Player();
+    virtual void move(){}
     virtual void setItemPos();
-    void changeWeapon();
-    weapon *w1, *w2;
+    virtual void setNewPosition(){}
 };
 
 #endif // PLAYER_H

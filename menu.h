@@ -2,8 +2,6 @@
 #define MENU_H
 
 #include <QMainWindow>
-#include <QGraphicsScene>
-#include <QGraphicsPixmapItem>
 #include "mainwindow.h"
 
 namespace Ui {
@@ -21,10 +19,12 @@ public:
 private slots:
     void on_pushButton_clicked();
 
+    void on_pushButton_2_clicked();
+
+    void on_pushButton_3_clicked();
+
 private:
     Ui::Menu *ui;
-    QGraphicsScene *scene;
-    QGraphicsPixmapItem *w1;
 };
 
 #endif // MENU_H

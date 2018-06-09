@@ -25,24 +25,30 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(int p1_ID);
+    MainWindow(int p1_ID, int p2_ID);
     ~MainWindow();
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event);
     void player_action();
     void shoot(weapon &w);
     void check_health();
     void enemy_move();
     void wave();
+    void skill();
 
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene, *healthScene;
-    Player *p;
-    static bool up, down, left, right, s;
-    int shot_interval, stage, waveStatus, score, respawnTime;
-    QVector<Enemy*> e;
+    Human *p;
+    bool up, down, left, right, s, skillStatus;
+    bool up2, down2, left2, right2, s2, skillStatus2;
+    int stage, waveStatus, score, respawnTime, respawnTime2, skillTime, mode;
+    QVector<Human*> e;
     QVector<QGraphicsPixmapItem*> hp;
+    QVector<QGraphicsRectItem*> mp;
+    Human *p2;
     QTimer *timer;
 };
 

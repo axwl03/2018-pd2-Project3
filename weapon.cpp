@@ -12,15 +12,17 @@ weapon::weapon(int w){
         setData(0, 30); //bullet speed
         setData(1, 110); //damage
         setData(2, 0);  //deviation
+        setData(3, 0.1); //muzzle flash scale
         sound.setMedia(QUrl::fromLocalFile("/home/wesleylin/ShootingGame/sound/Barrett_fire.wav"));
     }
-    if(weapon_ID == 1){//AK
+    if(weapon_ID == 1){
         shot_interval = 10;
         gun.append("./picture/AK47.png");
         setScale(0.24);
         setData(0, 20);
         setData(1, 30);
         setData(2, 2);
+        setData(3, 0.05);
         sound.setMedia(QUrl::fromLocalFile("/home/wesleylin/ShootingGame/sound/AK47_fire.wav"));
     }
     setPixmap(gun.at(0));
