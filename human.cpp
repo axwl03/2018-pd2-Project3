@@ -3,6 +3,7 @@
 Human::Human(int h, QObject *parent) : QObject(parent), health(h), timeInterval(0), time(0)
 {
     character.append("./picture/killer.png");
+    character.append("./picture/bone.png");
 }
 void Human::damaged(int damage){
     health -= damage;

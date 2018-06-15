@@ -31,7 +31,8 @@ SOURCES += \
     weapon.cpp \
     menu.cpp \
     human.cpp \
-    enemy.cpp
+    enemy.cpp \
+    rank.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,10 +41,12 @@ HEADERS += \
     weapon.h \
     menu.h \
     human.h \
-    enemy.h
+    enemy.h \
+    rank.h
 
 FORMS += \
         mainwindow.ui \
-    menu.ui
+    menu.ui \
+    rank.ui
 
 RESOURCES +=

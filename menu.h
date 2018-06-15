@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include "mainwindow.h"
+#include <QMessageBox>
+#include "rank.h"
 
 namespace Ui {
 class Menu;
@@ -23,8 +25,11 @@ private slots:
 
     void on_pushButton_3_clicked();
 
+    void on_pushButton_4_clicked();
+
 private:
     Ui::Menu *ui;
+    rank *score;
 };
 
 #endif // MENU_H

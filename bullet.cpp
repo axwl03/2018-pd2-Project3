@@ -48,10 +48,14 @@ bool bullet::isHit(const QGraphicsItem &human){
             return true;
         else return false;
     }
-    if(human.data(0).toString() == "p1"){
+    if(human.data(0).toString() == "p"){
         if(bx >= human.pos().x() && bx <= human.pos().x() + w && by >= human.pos().y() && by <= human.pos().y() + h)
             return true;
         else return false;
+    }
+    if(human.data(0).toString() == "shield"){
+        if(bx >= human.pos().x() && bx <= human.pos().x() + w && by >= human.pos().y() && by <= human.pos().y() + h && speed < 0)
+            speed = -speed;
     }
     return false;
 }

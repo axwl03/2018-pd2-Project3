@@ -8,7 +8,7 @@ weapon::weapon(int w){
     if(weapon_ID == 0){
         shot_interval = 100;
         gun.append("./picture/AWM.png");
-        setScale(0.36);
+        setScale(0.34);
         setData(0, 30); //bullet speed
         setData(1, 110); //damage
         setData(2, 0);  //deviation

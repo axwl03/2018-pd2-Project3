@@ -4,7 +4,7 @@ Player::Player(int h, int character_ID): Human(h){
     setPixmap(character.at(character_ID));
     setScale(0.4);
     setZValue(1);
-    setData(0, "p1");
+    setData(0, "p");
     w1 = new weapon(1);
     w2 = new weapon(0);
     w = w1;
