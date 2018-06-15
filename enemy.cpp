@@ -15,16 +15,29 @@ Enemy::Enemy(int h, int character_ID): Human(h)
     rx = qrand()%700+100;
     ry = qrand()%100+200;
 }
-Enemy::Enemy(int h, int character_ID, bool e): Human(h){
+Enemy::Enemy(int h, int character_ID, bool e): Human(h){ //1 vs 1 mode p2
     setPixmap(character.at(character_ID));
     setScale(0.4);
     setZValue(1);
     setRotation(180);
     setData(0, "enemy");
-    w1 = new weapon(1);
+    if(character_ID == 0){
+        setScale(0.4);
+        w1 = new weapon(2);
+        w2 = new weapon(0);
+    }
+    if(character_ID == 1){
+        setScale(0.42);
+        w1 = new weapon(2);
+        w2 = new weapon(3);
+    }
+    if(character_ID == 2){
+        setScale(0.4);
+        w1 = new weapon(1);
+        w2 = new weapon(3);
+    }
     w1->setRotation(180);
     w1->setData(0, -w1->data(0).toInt());
-    w2 = new weapon(0);
     w2->setRotation(180);
     w2->setData(0, -w2->data(0).toInt());
     w = w1;

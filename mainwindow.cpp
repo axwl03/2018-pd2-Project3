@@ -166,7 +166,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
             case Qt::Key_1:
                 if(respawnTime2 == 0) //could not shoot while respawning
                     s2 = 1;
-                qDebug() << s2;
                 break;
             case Qt::Key_2:
                 scene->removeItem(p2->w);
@@ -270,6 +269,32 @@ void MainWindow::player_action(){
     }
 }
 void MainWindow::shoot(weapon &w){
+    //shotgun bullet
+    if(w.data(4).toString() == "shotgun"){
+        w.sound.setPosition(0);
+        w.sound.play();
+        QVector<bullet *> sb(5);
+        for(int i = 0; i < 5; ++i){
+            sb[i] = new bullet(w.data(0).toInt(), w.data(1).toInt(), w.data(2).toInt());
+            scene->addItem(sb[i]);
+            if(w.data(0).toInt() > 0)
+                sb[i]->setPos(w.x() + w.pixmap().width()*w.scale()/2 - sb[i]->pixmap().width()*sb[i]->scale()/2, w.y()-sb[i]->pixmap().height()*sb[i]->scale());
+            if(w.data(0).toInt() < 0)
+                sb[i]->setPos(w.x() - w.pixmap().width()*w.scale()/2 - sb[i]->pixmap().width()*sb[i]->scale()/2, w.y());
+        }
+        sb[0]->flash.setScale(w.data(3).toFloat());
+        scene->addItem(&sb[0]->flash);
+        if(w.data(0).toInt() > 0)
+            sb[0]->flash.setPos(w.x() + w.pixmap().width()*w.scale()/2 - sb[0]->flash.pixmap().width()*sb[0]->flash.scale()/2, w.y()-sb[0]->flash.pixmap().height()*sb[0]->flash.scale());
+        if(w.data(0).toInt() < 0){
+            sb[0]->flash.setRotation(180);
+            sb[0]->flash.setPos(w.x() - w.pixmap().width()*w.scale()/2 + sb[0]->flash.pixmap().width()*sb[0]->flash.scale()/2, w.y()+sb[0]->flash.pixmap().height()*sb[0]->flash.scale());
+        }
+        for(int i = 0; i < 5; ++i)
+            connect(timer, &QTimer::timeout, sb[i], &bullet::fly);
+        return;
+    }
+    //normal bullet
     bullet *b = new bullet(w.data(0).toInt(), w.data(1).toInt(), w.data(2).toInt());
     w.sound.setPosition(0);
     w.sound.play();
@@ -281,7 +306,7 @@ void MainWindow::shoot(weapon &w){
         b->flash.setPos(w.x() + w.pixmap().width()*w.scale()/2 - b->flash.pixmap().width()*b->flash.scale()/2, w.y()-b->flash.pixmap().height()*b->flash.scale());
     }
     if(w.data(0).toInt() < 0){
-        b->setPos(w.x() - w.pixmap().width()*w.scale()/2 - b->pixmap().width()*b->scale()/2, w.y()+b->pixmap().height()*b->scale());
+        b->setPos(w.x() - w.pixmap().width()*w.scale()/2 - b->pixmap().width()*b->scale()/2, w.y());
         b->flash.setRotation(180);
         b->flash.setPos(w.x() - w.pixmap().width()*w.scale()/2 + b->flash.pixmap().width()*b->flash.scale()/2, w.y()+b->flash.pixmap().height()*b->flash.scale());
     }
@@ -461,7 +486,7 @@ void MainWindow::enemy_move(){
 }
 void MainWindow::wave(){
     for(int i = 0; i < stage; ++i){
-        e.push_back(new Enemy(100, 1));
+        e.push_back(new Enemy(100, 2));
         scene->addItem(e[i]);
         e[i]->setPos(qrand()%700+100, -100);
         scene->addItem(e[i]->w);
@@ -482,7 +507,6 @@ void MainWindow::skill(){
             skillStatus = 1;
             healthScene->removeItem(mp.last());
             mp.removeLast();
-            qDebug() << mp.size();
         }
     }
     ui->label_5->setText(QString::number((int)(500-skillTime)/100));
@@ -536,6 +560,7 @@ void MainWindow::message(bool result){
     msgBox.setPalette(p);
     QString str = "Your score is ";
     str.append(QString::number(ui->lcdNumber->intValue()));
+    str.append("\n");
     if((mode == 1 || mode == 3) && result == 0){
         msgBox.setText("You are dead");
         msgBox.setInformativeText(str);

@@ -5,6 +5,7 @@
 #include "mainwindow.h"
 #include <QMessageBox>
 #include "rank.h"
+#include "selectwindow.h"
 
 namespace Ui {
 class Menu;
@@ -30,6 +31,7 @@ private slots:
 private:
     Ui::Menu *ui;
     rank *score;
+    MainWindow *m;
 };
 
 #endif // MENU_H

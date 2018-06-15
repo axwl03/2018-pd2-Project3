@@ -32,7 +32,8 @@ SOURCES += \
     menu.cpp \
     human.cpp \
     enemy.cpp \
-    rank.cpp
+    rank.cpp \
+    selectwindow.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -42,11 +43,13 @@ HEADERS += \
     menu.h \
     human.h \
     enemy.h \
-    rank.h
+    rank.h \
+    selectwindow.h
 
 FORMS += \
         mainwindow.ui \
     menu.ui \
-    rank.ui
+    rank.ui \
+    selectwindow.ui
 
 RESOURCES +=

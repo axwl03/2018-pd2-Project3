@@ -25,5 +25,26 @@ weapon::weapon(int w){
         setData(3, 0.05);
         sound.setMedia(QUrl::fromLocalFile("/home/wesleylin/ShootingGame/sound/AK47_fire.wav"));
     }
+    if(weapon_ID == 2){
+        shot_interval = 8;
+        gun.append("./picture/M4.png");
+        setScale(0.23);
+        setData(0, 25);
+        setData(1, 15);
+        setData(2, 2);
+        setData(3, 0.05);
+        sound.setMedia(QUrl::fromLocalFile("/home/wesleylin/ShootingGame/sound/M4_fire.wav"));
+    }
+    if(weapon_ID == 3){
+        shot_interval = 100;
+        gun.append("./picture/shotgun.png");
+        setScale(0.32);
+        setData(0, 25);
+        setData(1, 40);
+        setData(2, 3);
+        setData(3, 0.075);
+        setData(4, "shotgun"); //special id to recognize shotgun
+        sound.setMedia(QUrl::fromLocalFile("/home/wesleylin/ShootingGame/sound/shotgun_fire.wav"));
+    }
     setPixmap(gun.at(0));
 }

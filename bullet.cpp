@@ -22,7 +22,6 @@ void bullet::fly(){
         if(scene()->items().at(i) == this)
             continue;
         if(isHit(*(scene()->items().at(i)))){
-            qDebug() << pos()<< scene()->items().at(i) << "hit";
             scene()->items().at(i)->setData(1, true);//being hit
             scene()->items().at(i)->setData(2, damage);//set damage
             scene()->removeItem(this);
@@ -30,7 +29,7 @@ void bullet::fly(){
             return;
         }
     }
-    if(time == 2){
+    if(time == 2 && flash.scene() != 0){
         scene()->removeItem(&flash);
     }
     if(y()<-100 || y()>1100){
