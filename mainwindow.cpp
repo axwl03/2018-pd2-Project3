@@ -3,7 +3,7 @@
 
 
 MainWindow::MainWindow(int p1_ID, QWidget *parent) :
-    ui(new Ui::MainWindow),up(0), down(0), left(0), right(0), s(0), skillStatus(0), stage(4), waveStatus(0), score(0), respawnTime(0), skillTime(0), mode(1)
+    ui(new Ui::MainWindow),up(0), down(0), left(0), right(0), s(0), skillStatus(0), stage(1), waveStatus(0), score(0), respawnTime(0), skillTime(0), mode(1)
 {
     widget = parent;
     ui->setupUi(this);
