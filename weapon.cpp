@@ -40,8 +40,8 @@ weapon::weapon(int w){
         gun.append("./picture/shotgun.png");
         setScale(0.32);
         setData(0, 25);
-        setData(1, 40);
-        setData(2, 3);
+        setData(1, 20);
+        setData(2, 4);
         setData(3, 0.075);
         setData(4, "shotgun"); //special id to recognize shotgun
         sound.setMedia(QUrl::fromLocalFile("/home/wesleylin/ShootingGame/sound/shotgun_fire.wav"));

@@ -15,6 +15,7 @@ class SelectWindow : public QDialog
 public:
     explicit SelectWindow(QString str, QWidget *parent = 0);
     ~SelectWindow();
+    void startText();
 
 private slots:
 
@@ -28,9 +29,9 @@ private slots:
     void on_backButton_clicked();
 
     void on_nextButton_clicked();
-
 private:
     Ui::SelectWindow *ui;
+    QPalette p1, p2;
 };
 
 #endif // SELECTWINDOW_H

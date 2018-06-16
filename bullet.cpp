@@ -23,7 +23,7 @@ void bullet::fly(){
             continue;
         if(isHit(*(scene()->items().at(i)))){
             scene()->items().at(i)->setData(1, true);//being hit
-            scene()->items().at(i)->setData(2, damage);//set damage
+            scene()->items().at(i)->setData(2, scene()->items().at(i)->data(2).toInt() + damage);//set damage
             scene()->removeItem(this);
             delete this;
             return;

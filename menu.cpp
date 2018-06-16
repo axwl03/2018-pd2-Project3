@@ -16,6 +16,7 @@ Menu::~Menu()
 void Menu::on_pushButton_clicked()
 {
     SelectWindow *s = new SelectWindow("Select Player1", this);
+    s->startText();
     int result = s->exec();
     delete s;
     if(result == 0){
@@ -30,6 +31,7 @@ void Menu::on_pushButton_2_clicked()
 {
     SelectWindow *s1 = new SelectWindow("Select Player1", this);
     SelectWindow *s2 = new SelectWindow("Select Player2");
+    s2->startText();
     int result1 = 0, result2 = 0;
     while(result1 == 0 || result2 == 0){
         result1 = s1->exec();
@@ -51,6 +53,7 @@ void Menu::on_pushButton_3_clicked()
 {
     SelectWindow *s1 = new SelectWindow("Select Player1", this);
     SelectWindow *s2 = new SelectWindow("Select Player2");
+    s2->startText();
     int result1 = 0, result2 = 0;
     while(result1 == 0 || result2 == 0){
         result1 = s1->exec();

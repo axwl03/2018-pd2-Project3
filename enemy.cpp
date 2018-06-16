@@ -7,7 +7,10 @@ Enemy::Enemy(int h, int character_ID): Human(h)
     setZValue(1);
     setRotation(180);
     setData(0, "enemy");
-    w = new weapon(1);
+    if(h == 100)
+        w = new weapon(1);
+    if(h > 100)
+        w = new weapon(4);
     w->setData(0, -10);
     w->setRotation(180);
     healthbar = new QGraphicsRectItem;
@@ -57,7 +60,7 @@ void Enemy::move(){
 }
 void Enemy::setItemPos(){
     w->setPos(x()-pixmap().width()*scale()/1.6, y()-pixmap().height()*scale()/1.6+w->pixmap().height()*w->scale());
-    healthbar->setRect(x()-pixmap().width()*scale()/2-50, y()-pixmap().height()*scale()-20, health, 5);
+    healthbar->setRect(x()-pixmap().width()*scale()/2-health/2, y()-pixmap().height()*scale()-20, health, 5);
     if(health > 50)
         healthbar->setBrush(Qt::green);
     if(health <= 50 && health > 20)

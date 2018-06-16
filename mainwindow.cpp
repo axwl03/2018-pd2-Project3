@@ -3,13 +3,13 @@
 
 
 MainWindow::MainWindow(int p1_ID, QWidget *parent) :
-    ui(new Ui::MainWindow),up(0), down(0), left(0), right(0), s(0), skillStatus(0), stage(1), waveStatus(0), score(0), respawnTime(0), skillTime(0), mode(1)
+    ui(new Ui::MainWindow),up(0), down(0), left(0), right(0), s(0), skillStatus(0), stage(4), waveStatus(0), score(0), respawnTime(0), skillTime(0), mode(1)
 {
     widget = parent;
     ui->setupUi(this);
     scene = new QGraphicsScene(0, 0, 800, 1000);
     ui->graphicsView->setScene(scene);
-    scene->setBackgroundBrush(Qt::lightGray);
+    scene->setBackgroundBrush(QBrush(QPixmap("./picture/ground.png")));
     p = new Player(100, p1_ID);
     p2 = new Enemy(100, 0, 1);//not using it
     scene->addItem(p);
@@ -26,7 +26,7 @@ MainWindow::MainWindow(int p1_ID, QWidget *parent) :
     }
     for(int i = 0; i < 3; ++i){
         mp.push_back(new QGraphicsRectItem(0+50*i, 160, 30, 5));
-        mp[i]->setBrush(Qt::darkMagenta);
+        mp[i]->setBrush(QColor(67,156,204));
         healthScene->addItem(mp[i]);
     }
     qsrand(QDateTime::currentMSecsSinceEpoch());
@@ -53,7 +53,7 @@ MainWindow::MainWindow(int p1_ID, int p2_ID, QWidget *parent):ui(new Ui::MainWin
     ui->lcdNumber_2->setGeometry(920, 800, 120, 60);
     scene = new QGraphicsScene(0, 0, 800, 1000);
     ui->graphicsView->setScene(scene);
-    scene->setBackgroundBrush(Qt::lightGray);
+    scene->setBackgroundBrush(QBrush(QPixmap("./picture/ground.png")));
     p = new Player(100, p1_ID);
     p2 = new Enemy(100, p2_ID, 1);
     scene->addItem(p);
@@ -77,7 +77,7 @@ MainWindow::MainWindow(int p1_ID, int p2_ID, bool s, QWidget *parent):ui(new Ui:
    ui->setupUi(this);
    scene = new QGraphicsScene(0, 0, 800, 1000);
    ui->graphicsView->setScene(scene);
-   scene->setBackgroundBrush(Qt::lightGray);
+   scene->setBackgroundBrush(QBrush(QPixmap("./picture/ground.png")));
    p = new Player(100, p1_ID);
    p2 = new Player(100, p2_ID);
    scene->addItem(p);
@@ -97,7 +97,7 @@ MainWindow::MainWindow(int p1_ID, int p2_ID, bool s, QWidget *parent):ui(new Ui:
    }
    for(int i = 0; i < 5; ++i){
        mp.push_back(new QGraphicsRectItem(0+50*i, 160, 30, 5));
-       mp[i]->setBrush(Qt::darkMagenta);
+       mp[i]->setBrush(QColor(67,156,204));
        healthScene->addItem(mp[i]);
    }
    qsrand(QDateTime::currentMSecsSinceEpoch());
@@ -471,17 +471,17 @@ void MainWindow::enemy_move(){
             e.remove(0);
         }
     }*/
-    if(mode == 1 && e.size() == 0 && stage < 5){
+    if(mode == 1 && e.size() == 0 && stage <= 5){
         ++stage;
         wave();
     }
-    if(mode == 1 && stage >= 5)
+    if(mode == 1 && stage > 5)
         message(1);
-    if(mode == 3 && e.size() == 0 && stage < 7){
+    if(mode == 3 && e.size() == 0 && stage <= 6){
         ++stage;
         wave();
     }
-    if(mode == 3&& stage >= 7)
+    if(mode == 3&& stage > 6)
         message(1);
 }
 void MainWindow::wave(){
@@ -551,7 +551,7 @@ void MainWindow::closeEvent(QCloseEvent *event){
 void MainWindow::message(bool result){
     QMessageBox msgBox;
     msgBox.addButton("Menu", QMessageBox::AcceptRole)->setFlat(1);
-    msgBox.addButton("Close", QMessageBox::RejectRole)->setFlat(1);
+    msgBox.addButton("Exit", QMessageBox::RejectRole)->setFlat(1);
     QPalette p;
     p.setBrush(QPalette::Window, QBrush(QColor(55,65,71)));
     p.setBrush(QPalette::Button, QBrush(QColor(55,65,71)));
@@ -578,7 +578,7 @@ void MainWindow::message(bool result){
         msgBox.setText("Player2 Win!!");
     }
     msgBox.exec();
-    if(msgBox.clickedButton()->text() == "Close")
+    if(msgBox.clickedButton()->text() == "Exit")
         exit(0);
     if(msgBox.clickedButton()->text() == "Menu")
         close();
